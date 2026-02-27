@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OnBeing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f8f8f8;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    main {
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      display: block;
+      padding: 1.25rem 1.5rem;
+      background: #fff;
+      border: 1px solid #e2e2e2;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      text-decoration: none;
+      color: #1a1a1a;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .card:hover {
+      border-color: #ccc;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 500;
+    }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+
+    @media (min-width: 500px) {
+      .cards {
+        flex-direction: row;
+      }
+
+      .card {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>OnBeing</h1>
+    <div class="cards">
+      <a class="card" href="https://drive.google.com/drive/folders/1KvNEmTROM4nJwXkT4TWqQTCZQbP1rZNR?usp=drive_link" target="_blank" rel="noopener noreferrer">
+        <div class="card-title">Google Drive</div>
+        <div class="card-desc">Shared files &amp; docs</div>
+      </a>
+      <a class="card" href="https://www.figma.com/files/team/1608970415215167574/project/562957147?fuid=1564952983711794122" target="_blank" rel="noopener noreferrer">
+        <div class="card-title">Figma</div>
+        <div class="card-desc">Design files</div>
+      </a>
+    </div>
+  </main>
+</body>
+</html>
