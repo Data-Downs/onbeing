@@ -48,18 +48,21 @@
       width: 100%;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 2.5rem;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    .logo {
+      margin-bottom: 6rem;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .logo svg {
+      width: 200px;
+      height: auto;
     }
 
     .links {
       display: flex;
-      gap: 1.5rem;
-      justify-content: center;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
     }
 
     .links a {
@@ -77,12 +80,64 @@
   </style>
 </head>
 <body>
-  <video class="video-bg" autoplay muted loop playsinline>
+  <video class="video-bg" id="vid-fwd" muted playsinline>
     <source src="bg.mp4" type="video/mp4">
   </video>
+  <video class="video-bg" id="vid-rev" muted playsinline style="opacity:0">
+    <source src="bg-rev.mp4" type="video/mp4">
+  </video>
+  <script>
+    const fwd = document.getElementById('vid-fwd');
+    const rev = document.getElementById('vid-rev');
+    const EASE_ZONE = 2.5;
+    const PAUSE_MS = 300;
+    let switching = false;
+
+    function playVideo(active, inactive) {
+      switching = false;
+      active.style.opacity = '1';
+      inactive.style.opacity = '0';
+      active.currentTime = 0;
+      active.playbackRate = 1;
+      active.play();
+
+      function monitor() {
+        if (switching) return;
+        const remaining = active.duration - active.currentTime;
+        if (remaining < 0.15) {
+          switching = true;
+          active.pause();
+          setTimeout(() => playVideo(inactive, active), PAUSE_MS);
+          return;
+        }
+        if (remaining < EASE_ZONE) {
+          const t = remaining / EASE_ZONE;
+          active.playbackRate = Math.max(0.1, t * t);
+        }
+        requestAnimationFrame(monitor);
+      }
+      requestAnimationFrame(monitor);
+    }
+
+    Promise.all([
+      new Promise(r => { fwd.addEventListener('canplaythrough', r, { once: true }); fwd.load(); }),
+      new Promise(r => { rev.addEventListener('canplaythrough', r, { once: true }); rev.load(); })
+    ]).then(() => playVideo(fwd, rev));
+  </script>
   <div class="overlay"></div>
   <main>
-    <h1>OnBeing</h1>
+    <div class="logo">
+      <svg width="132px" height="56px" viewBox="0 0 132 56" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="none" stroke-width="1" fill="#ffffff" fill-rule="evenodd">
+          <path d="M116.835833,45.4621679 C116.835833,49.3240228 119.789419,52.2769244 123.621864,52.2769244 C125.440113,52.2769244 126.916051,51.6524891 128.052072,50.7438777 L128.052072,47.5245824 L122.941346,47.5245824 L122.941346,44.1178881 L131.885201,44.1178881 L131.885201,51.8795565 C130.125429,54.1228725 127.171844,55.6846446 123.537056,55.6846446 C117.347761,55.6846446 113.003046,51.169287 113.003046,45.4621679 C113.003046,39.7550487 117.290652,35.2400332 123.480973,35.2400332 C126.432849,35.2400332 128.960683,36.3473285 130.749864,38.0790591 L128.279139,40.6920435 C127.087035,39.499256 125.410704,38.6477534 123.452248,38.6477534 C119.675201,38.6477534 116.835833,41.6861472 116.835833,45.4621679"></path>
+          <polygon points="94.1456145 35.5235938 94.1456145 48.4715627 83.0709513 35.5235938 80.3735005 35.5235938 80.3735005 55.4008788 84.206972 55.4008788 84.206972 42.4525679 95.2809513 55.4008788 97.979086 55.4008788 97.979086 35.5235938"></polygon>
+          <polygon points="59.2703938 55.4006736 63.1035233 55.4006736 63.1035233 35.5233886 59.2703938 35.5233886"></polygon>
+          <polygon points="29.7901772 35.5235938 29.7901772 55.4008788 42.0001772 55.4008788 42.0001772 51.9931585 33.6236487 51.9931585 33.6236487 46.9730549 41.0313793 46.9730549 41.0313793 43.5653347 33.6236487 43.5653347 33.6236487 38.931314 41.7153171 38.931314 41.7153171 35.5235938"></polygon>
+          <path d="M10.2231606,51.1127596 C9.74030052,51.6523865 9.00198964,51.9929876 7.66762694,51.9929876 L3.83381347,51.9929876 L3.83381347,46.598428 L7.66762694,46.598428 C9.00198964,46.598428 9.74030052,46.939029 10.2231606,47.478656 C10.6779793,47.9608321 10.9330881,48.5859513 10.9330881,49.2958788 C10.9330881,50.0054642 10.6779793,50.6305834 10.2231606,51.1127596 Z M3.83381347,38.931485 L7.38379275,38.931485 C8.57623834,38.931485 9.11552332,39.2153192 9.51323316,39.6414124 C9.8538342,40.0107389 10.0809016,40.5216404 10.0809016,41.0612674 C10.0809016,41.6002104 9.8538342,42.1111119 9.51323316,42.4807803 C9.11552332,42.9068736 8.57623834,43.1907078 7.38379275,43.1907078 L3.83381347,43.1907078 L3.83381347,38.931485 Z M11.7852746,44.2412363 C11.7852746,44.2412363 11.6970466,44.1919927 11.5537617,44.1177855 C12.7725389,43.2683347 13.5730881,41.8467699 13.5730881,40.2343865 C13.5730881,37.633029 11.4894715,35.5237648 8.92265285,35.5237648 L6.72071503,35.5237648 L0,35.5237648 L0,55.4007078 L7.75243523,55.4007078 C10.3086528,55.4007078 11.8413575,54.7195057 12.9483109,53.6118684 C14.0562902,52.5326145 14.7662176,50.9992259 14.7662176,49.3242622 C14.7662176,47.1093295 13.5453886,45.1214642 11.7852746,44.2412363 Z"></path>
+          <path d="M89.1764301,17.0369938 C92.9247513,17.0369938 95.7073523,13.9705585 95.7073523,10.2222373 C95.7073523,6.47391606 92.9247513,3.4078228 89.1764301,3.4078228 C85.4284508,3.4078228 82.6458497,6.47391606 82.6458497,10.2222373 C82.6458497,13.9705585 85.4284508,17.0369938 89.1764301,17.0369938 M89.1764301,0.000102590674 C95.3093005,0.000102590674 99.5404819,4.57188497 99.5404819,10.2222373 C99.5404819,15.8729316 95.3093005,20.444714 89.1764301,20.444714 C83.0428756,20.444714 78.8120363,15.8729316 78.8120363,10.2222373 C78.8120363,4.57188497 83.0428756,0.000102590674 89.1764301,0.000102590674"></path>
+        </g>
+      </svg>
+    </div>
     <div class="links">
       <a href="https://drive.google.com/drive/folders/1KvNEmTROM4nJwXkT4TWqQTCZQbP1rZNR?usp=drive_link" target="_blank" rel="noopener noreferrer">Google Drive</a>
       <a href="https://www.figma.com/files/team/1608970415215167574/project/562957147?fuid=1564952983711794122" target="_blank" rel="noopener noreferrer">Figma</a>
